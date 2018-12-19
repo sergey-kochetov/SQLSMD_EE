@@ -27,6 +27,6 @@
             create new table<br>
         delete|tableName|column|value<br>
             deleting data in the table with parameters<br>
-        You can goto <a href="menu">Menu</a><br>
+        <%@include file="footer.jsp" %>
     </body>
 </html>

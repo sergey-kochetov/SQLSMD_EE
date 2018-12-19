@@ -5,6 +5,7 @@
         <title>SQLCmd</title>
     </head>
     <body>
-        Cant load this page. You can goto <a href="menu">Menu</a><br>
+        Error ${message}.<br>
+        <%@include file="footer.jsp" %>
     </body>
 </html>
