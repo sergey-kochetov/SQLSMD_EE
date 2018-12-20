@@ -6,15 +6,13 @@
     </head>
     <body>
         <table border="1">
-            <c:forEach items="${table}" var="row">
-                <tr>
-                    <c:forEach items="${row}" var="element">
-                        <td>
-                            ${element}<br>
-                        </td>
-                    </c:forEach>
-                </tr>
-            </c:forEach>
+            <tr>
+                <c:forEach items="${tables}" var="table">
+                            <td>
+                                <a href="${table}">${table}</a><br>
+                            </td>
+                </c:forEach>
+            </tr>
         </table>
         <a href="menu">menu</a><br>
     </body>

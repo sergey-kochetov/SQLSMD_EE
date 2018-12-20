@@ -66,13 +66,13 @@ public class JDBCDatabaseManager implements DatabaseManager  {
     }
 
     @Override
-    public Set<Map<String, Object>> getTableData(String tableName) throws SQLException {
+    public List<Map<String, Object>> getTableData(String tableName) throws SQLException {
         checkConnection();
         try (  Statement stmt = connection.createStatement();
                ResultSet rs = stmt.executeQuery("SELECT * FROM public." + tableName);
         ) {
             ResultSetMetaData rsmd = rs.getMetaData();
-            Set<Map<String, Object>> result = UtilsCommand.getDataSetMap();
+            List<Map<String, Object>> result = new LinkedList<>();
             while (rs.next()) {
                 Map<String, Object> dataSet = UtilsCommand.getDataMap();
                 for (int i = 1; i <= rsmd.getColumnCount(); i++) {
@@ -174,19 +174,19 @@ public class JDBCDatabaseManager implements DatabaseManager  {
     }
 
     @Override
-    public Set<String> getTableColumns(String tableName) throws SQLException {
+    public List<String> getTableColumns(String tableName) throws SQLException {
         checkConnection();
         try(PreparedStatement stmt = connection.prepareStatement(SQL_GET_TABLE_COLUMNS)) {
             stmt.setString(1, "public");
             stmt.setString(2, tableName);
             ResultSet rs = stmt.executeQuery();
-            Set<String> tables = UtilsCommand.getDataSet();
+            List<String> tables = UtilsCommand.getDataList();
             while (rs.next()) {
                 tables.add(rs.getString("column_name"));
             }
             return tables;
         } catch (SQLException e) {
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
     }
 

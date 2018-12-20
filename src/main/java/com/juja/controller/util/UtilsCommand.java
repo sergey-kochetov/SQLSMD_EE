@@ -15,9 +15,15 @@ public class UtilsCommand {
     public static List<String> getDataList(Set<String> set) {
         return new LinkedList<>(set);
     }
+
+    public static List<Map<String, Object>> getDataListMap() {
+        return new LinkedList<>();
+    }
+
     public static Set<Map<String, Object>> getDataSetMap() {
         return new LinkedHashSet<>();
     }
+
     public static Set<String> getDataSet() {
         return new LinkedHashSet<>();
     }

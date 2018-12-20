@@ -14,7 +14,7 @@ public interface DatabaseManager {
 
     Connection getConnection() throws SQLException;
 
-    Set<Map<String, Object>> getTableData(String tableName) throws SQLException;
+    List<Map<String, Object>> getTableData(String tableName) throws SQLException;
 
     int getSize(String tableName) throws SQLException;
 
@@ -32,7 +32,7 @@ public interface DatabaseManager {
 
     void update(String tableName, int id, Map<String, Object> newValue) throws SQLException;
 
-    Set<String> getTableColumns(String tableName) throws SQLException;
+    List<String> getTableColumns(String tableName) throws SQLException;
 
     void disconnect() throws SQLException;
 

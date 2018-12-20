@@ -22,11 +22,6 @@ public class JDBCDatabaseManagerTest extends DatabaseManagerTest {
 
     @Before
     public void setup() throws SQLException {
-//        try {
-//            DBinit.startUp();
-//        } catch (URISyntaxException | IOException e) {
-//            e.printStackTrace();
-//        }
         manager = getDatabaseManager();
         manager.connect("sqlsmd", "postgres", "postgres");
     }
@@ -51,11 +46,10 @@ public class JDBCDatabaseManagerTest extends DatabaseManagerTest {
         manager.insert(customer, input);
 
         // then
-        Set<Map<String, Object>> users = manager.getTableData("customer");
+        List<Map<String, Object>> users = manager.getTableData("customer");
         assertEquals(1, users.size());
 
         Map<String, Object> user = users.stream().findFirst().get();
-       // Map<String, Object> user = users.stream();
         assertEquals("[c_id, c_name, c_password]", user.keySet().toString());
         assertEquals("[13, Stiven, pass]", user.values().toString());
     }
@@ -79,7 +73,7 @@ public class JDBCDatabaseManagerTest extends DatabaseManagerTest {
         manager.update("customer", 10, newValue);
 
         // then
-        Set<Map<String, Object>> users = manager.getTableData("customer");
+        List<Map<String, Object>> users = manager.getTableData("customer");
         assertEquals(1, users.size());
 
         Map<String, Object> user = users.stream().findFirst().get();
@@ -94,7 +88,7 @@ public class JDBCDatabaseManagerTest extends DatabaseManagerTest {
         manager.clear(customer);
 
         // when
-        Set<String> columnNames = manager.getTableColumns(customer);
+        List<String> columnNames = manager.getTableColumns(customer);
 
         // then
         assertEquals("[c_id, c_name, c_password]", columnNames.toString());

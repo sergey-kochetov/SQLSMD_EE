@@ -16,7 +16,10 @@
                 <value>menu</value>
                 <value>connect</value>
                 <value>find</value>
+                <value>tables</value>
             </list>
         </property>
+
+        <lookup-method name="getManager" bean="JDBCDatabaseManager"/>
     </bean>
 </beans>
