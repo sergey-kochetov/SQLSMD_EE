@@ -9,7 +9,7 @@
             <tr>
                 <c:forEach items="${tables}" var="table">
                             <td>
-                                <a href="${table}">${table}</a><br>
+                                <a href="find?table=${table}">${table}</a><br>
                             </td>
                 </c:forEach>
             </tr>

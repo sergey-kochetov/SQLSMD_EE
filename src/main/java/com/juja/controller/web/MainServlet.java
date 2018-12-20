@@ -57,11 +57,7 @@ public class MainServlet extends HttpServlet {
                 req.setAttribute("tables", manager.getTableNames());
 
                 jsp("tables",req, resp);
-            } else if (action.startsWith("/")) {
-                String tableName = action.replace("/","");
-                req.setAttribute("table", service.find(manager, tableName));
-                jsp("find", req, resp);
-            } else {
+            }  else {
                 jsp("error", req, resp);
             }
         } catch (Exception e) {
