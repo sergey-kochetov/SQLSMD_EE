@@ -2,11 +2,12 @@ package com.juja.service;
 
 import com.juja.model.DatabaseManager;
 import com.juja.model.JDBCDatabaseManager;
+import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
+@Component
 public class ServiceImpl implements Service {
 
     @Override
