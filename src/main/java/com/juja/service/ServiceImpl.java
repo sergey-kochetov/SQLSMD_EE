@@ -1,23 +1,37 @@
 package com.juja.service;
 
 import com.juja.model.DatabaseManager;
-import com.juja.model.JDBCDatabaseManager;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
-public class ServiceImpl implements Service {
+public class ServiceImpl implements Service, ApplicationContextAware {
 
-    @Override
-    public List<String> commandsList() {
-        return Arrays.asList("help", "menu", "connect", "find");
+    private List<String> commands;
+
+    private ApplicationContext context;
+
+    public ServiceImpl() {
     }
 
     @Override
+    public List<String> commandsList() {
+        //return Arrays.asList("help", "menu", "connect", "find");
+        return commands;
+    }
+    @Override
     public DatabaseManager connect(String dbName, String userName, String password) throws SQLException {
-        DatabaseManager manager = new JDBCDatabaseManager();
+        DatabaseManager manager =getManager();
         manager.connect(dbName, userName, password);
         return manager;
     }
@@ -38,5 +52,20 @@ public class ServiceImpl implements Service {
             result.add(current);
         }
         return result;
+    }
+
+    public void setCommands(List<String> commands) {
+        this.commands = commands;
+    }
+
+
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.context = applicationContext;
+    }
+    @Bean
+    public DatabaseManager getManager() {
+        return (DatabaseManager) context.getBean("JDBCDatabaseManager");
     }
 }

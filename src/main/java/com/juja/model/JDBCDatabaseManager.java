@@ -3,11 +3,15 @@ package com.juja.model;
 import com.juja.config.ConfigDB;
 import com.juja.config.ConfigMsg;
 import com.juja.controller.util.UtilsCommand;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Component
+@Scope(value = "prototype")
 public class JDBCDatabaseManager implements DatabaseManager  {
 
     private static final String URL_CONNECT_DB = "jdbc:postgresql://localhost:5432/";
