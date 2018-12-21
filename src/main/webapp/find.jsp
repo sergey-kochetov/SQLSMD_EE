@@ -13,6 +13,7 @@
                             ${element}<br>
                         </td>
                     </c:forEach>
+                    <td><a href="edit?row=${row}">edit</a><br></td>
                 </tr>
             </c:forEach>
         </table>

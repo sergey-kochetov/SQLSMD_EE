@@ -20,6 +20,7 @@
                 <value>success</value>
                 <value>clear</value>
                 <value>drop</value>
+                <value>edit</value>
             </list>
         </property>
 

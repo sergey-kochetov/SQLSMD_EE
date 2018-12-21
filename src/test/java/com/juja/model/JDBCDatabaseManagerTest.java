@@ -88,7 +88,7 @@ public class JDBCDatabaseManagerTest extends DatabaseManagerTest {
         manager.clear(customer);
 
         // when
-        List<String> columnNames = manager.getTableColumns(customer);
+        List<String> columnNames = manager.getTableHead(customer);
 
         // then
         assertEquals("[c_id, c_name, c_password]", columnNames.toString());

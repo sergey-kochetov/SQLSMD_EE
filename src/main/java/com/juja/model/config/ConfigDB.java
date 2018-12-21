@@ -1,15 +1,20 @@
-package com.juja.config;
+package com.juja.model.config;
 
 import java.io.InputStream;
 import java.util.Properties;
 
-public class ConfigMsg {
+public class ConfigDB {
+    public static final String DB_URL = "db.url";
+    public static final String DB_LOGIN = "db.login";
+    public static final String DB_PASSWORD = "db.password";
+    public static final String DB_LIMIT = "db.limit";
+
     private static Properties properties = new Properties();
 
     public synchronized static String getProperty(String name) {
         if (properties.isEmpty()) {
             try (InputStream is = ConfigDB.class.getClassLoader()
-                    .getResourceAsStream("msg.properties")) {
+                    .getResourceAsStream("dao.properties")) {
 
                 properties.load(is);
 

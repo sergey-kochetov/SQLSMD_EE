@@ -1,7 +1,7 @@
 package com.juja.model;
 
-import com.juja.config.ConfigDB;
-import com.juja.config.ConfigMsg;
+import com.juja.model.config.ConfigDB;
+import com.juja.model.config.ConfigMsg;
 import com.juja.controller.util.UtilsCommand;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -157,7 +157,7 @@ public class JDBCDatabaseManager implements DatabaseManager  {
     public void update(String tableName, int id, Map<String, Object> newValue) throws SQLException {
         checkConnection();
         String tableNames = getNameFormated(newValue, "%s = ?");
-        String nameId = getTableColumns(tableName)
+        String nameId = getTableHead(tableName)
                 .stream()
                 .findFirst()
                 .get();
@@ -174,7 +174,7 @@ public class JDBCDatabaseManager implements DatabaseManager  {
     }
 
     @Override
-    public List<String> getTableColumns(String tableName) throws SQLException {
+    public List<String> getTableHead(String tableName) throws SQLException {
         checkConnection();
         try(PreparedStatement stmt = connection.prepareStatement(SQL_GET_TABLE_COLUMNS)) {
             stmt.setString(1, "public");
