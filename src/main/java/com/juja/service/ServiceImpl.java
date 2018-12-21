@@ -22,12 +22,12 @@ public abstract class ServiceImpl implements Service {
         return commands;
     }
     @Override
-    public DatabaseManager connect(String dbName, String userName, String password) {
+    public DatabaseManager connect(String dbName, String userName, String password) throws ServiceException {
         DatabaseManager manager = getManager();
         try {
             manager.connect(dbName, userName, password);
         } catch (Exception e) {
-
+            throw new ServiceException(e);
         }
         return manager;
     }

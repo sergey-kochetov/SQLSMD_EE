@@ -26,17 +26,16 @@ public class MainServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = getAction(req);
-        DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("db_manager");
         try {
-            if (action.startsWith("/connect")) {
-                if (manager == null) {
+            if (action.equals("/connect")) {
+                if (getManager(req) == null) {
                     jsp("connect", req, resp);
                 } else {
                     resp.sendRedirect(resp.encodeRedirectURL("menu"));
                 }
                 return;
             }
-            if (manager == null) {
+            if (getManager(req) == null) {
                 resp.sendRedirect(resp.encodeRedirectURL("connect"));
                 return;
             }
@@ -45,23 +44,26 @@ public class MainServlet extends HttpServlet {
                 req.setAttribute("items", service.commandsList());
                 jsp("menu", req, resp);
             } else if (action.startsWith("/help")) {
-                req.getRequestDispatcher("help.jsp").forward(req, resp);
+                jsp("help", req, resp);
             } else if (action.startsWith("/find")) {
                 String tableName = req.getParameter("table");
-
-                req.setAttribute("table", service.find(manager, tableName));
+                req.setAttribute("table", tableName);
+                req.setAttribute("tableData", service.find(getManager(req), tableName));
                 jsp("find", req, resp);
             } else if (action.startsWith("/tables")) {
-                String tableName = req.getParameter("table");
-
-                req.setAttribute("tables", manager.getTableNames());
-
+                req.setAttribute("tables", getManager(req).getTableNames());
                 jsp("tables",req, resp);
+            }  else if (action.startsWith("/clear")) {
+                jsp("clear",req, resp);
+            }  else if (action.startsWith("/drop")) {
+                jsp("drop",req, resp);
+            }  else if (action.startsWith("/success")) {
+                jsp("success",req, resp);
             }  else {
                 jsp("error", req, resp);
             }
         } catch (Exception e) {
-
+            jsp("error", req, resp);
         }
     }
 
@@ -76,11 +78,23 @@ public class MainServlet extends HttpServlet {
                 DatabaseManager manager = service.connect(dbName, userName, password);
                 req.getSession().setAttribute("db_manager", manager);
                 resp.sendRedirect(resp.encodeRedirectURL("menu"));
+            } else if (action.startsWith("/clear")) {
+                String tableName = req.getParameter("tableName");
+                getManager(req).clear(tableName);
+                resp.sendRedirect(resp.encodeRedirectURL("success"));
+            } if (action.startsWith("/drop")) {
+                String tableName = req.getParameter("tableName");
+                getManager(req).drop(tableName);
+                resp.sendRedirect(resp.encodeRedirectURL("success"));
             }
         } catch (Exception e) {
             req.setAttribute("message", e.getMessage());
             jsp("error", req, resp);
         }
+    }
+
+    private DatabaseManager getManager(HttpServletRequest req) {
+        return (DatabaseManager) req.getSession().getAttribute("db_manager");
     }
 
     private String getAction(HttpServletRequest req) {

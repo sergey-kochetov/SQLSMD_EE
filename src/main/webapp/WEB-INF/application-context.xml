@@ -17,6 +17,9 @@
                 <value>connect</value>
                 <value>find</value>
                 <value>tables</value>
+                <value>success</value>
+                <value>clear</value>
+                <value>drop</value>
             </list>
         </property>
 
