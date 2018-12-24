@@ -35,6 +35,6 @@ public class ConnectAction extends AbstractAction {
         DatabaseManager manager = service.connect(dbName, userName, password);
         req.getSession().setAttribute("db_manager", manager);
 
-        redirect(resp, "menu");
+        redirect(resp, "success");
     }
 }
