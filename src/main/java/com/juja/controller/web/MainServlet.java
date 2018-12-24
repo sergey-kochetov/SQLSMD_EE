@@ -3,6 +3,7 @@ package com.juja.controller.web;
 import com.juja.service.Service;
 import com.juja.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletConfig;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Component
 public class MainServlet extends HttpServlet {
     @Autowired
     private Service service;
@@ -36,13 +38,21 @@ public class MainServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         Action action = resolver.getAction(getActionName(req));
+
         try {
             action.post(req, resp);
-        } catch (ServiceException e) {
-            e.printStackTrace();
+        } catch  (Exception e) {
+            try {
+                new ErrorAction(service).jsp("error", req, resp);
+            } catch (ServletException e1) {
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
+
     }
 
 

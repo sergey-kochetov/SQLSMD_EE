@@ -52,4 +52,9 @@ public abstract class AbstractAction implements Action {
     public void post(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, ServiceException {
         // do nothing
     }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName().toLowerCase().replaceAll("action","");
+    }
 }

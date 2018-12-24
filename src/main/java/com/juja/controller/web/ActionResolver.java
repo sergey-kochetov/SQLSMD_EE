@@ -19,16 +19,17 @@ public class ActionResolver {
     public ActionResolver() {
         actions = new LinkedList<>();
         actions.addAll(Arrays.asList(
-                new ClearAction(service),
+                new MenuAction(service, actions),
+                //new ClearAction(service),
                 new ConnectAction(service),
-                new DropAction(service),
-                new EditeAction(service),
-                new FindAction(service),
+                //new DropAction(service),
+                //new EditeAction(service),
+                //new FindAction(service),
                 new HelpAction(service),
-                new InsertAction(service),
-                new SuccessAction(service),
+                //new InsertAction(service),
+                //new SuccessAction(service),
                 new TablesAction(service),
-                new UpdateAction(service),
+                //new UpdateAction(service),
                 new ErrorAction(service)
         ));
 
