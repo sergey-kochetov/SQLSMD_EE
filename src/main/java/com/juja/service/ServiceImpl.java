@@ -4,15 +4,13 @@ import com.juja.model.DatabaseManager;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public abstract class ServiceImpl implements Service {
 
-    private List<String> commands;
+    private List<String> commands = new LinkedList<>(Arrays.asList(
+            "menu", "connect", "find", "error", "help", "success", "tables"));
 
     public ServiceImpl() {
     }
@@ -50,7 +48,7 @@ public abstract class ServiceImpl implements Service {
                 result.add(current);
             }
         } catch (Exception e) {
-            throw new ServiceException(e);
+            //throw new ServiceException(e);
         }
         return result;
     }
@@ -65,9 +63,9 @@ public abstract class ServiceImpl implements Service {
     }
 
     @Override
-    public Set<String> getTableNames() throws ServiceException{
+    public Set<String> getTableNames(DatabaseManager manager) throws ServiceException {
         try {
-            return getManager().getTableNames();
+            return manager.getTableNames();
         } catch (SQLException e) {
             throw new ServiceException(e);
         }

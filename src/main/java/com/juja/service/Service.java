@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Set;
 
 public interface Service {
+
+   DatabaseManager getManager();
+
     List<String> commandsList();
 
     DatabaseManager connect(String dbName, String userName, String password) throws ServiceException;
@@ -17,7 +20,9 @@ public interface Service {
 
     Set<String> getTableNames() throws ServiceException;
 
-    List<String> getTableHead(String tableName) throws ServiceException;
+ Set<String> getTableNames(DatabaseManager manager) throws ServiceException;
+
+ List<String> getTableHead(String tableName) throws ServiceException;
 
     List<Map<String, Object>> getTableData(String tableName) throws ServiceException;
 
