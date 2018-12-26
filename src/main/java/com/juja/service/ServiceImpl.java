@@ -1,9 +1,11 @@
 package com.juja.service;
 
 import com.juja.model.DatabaseManager;
+import com.juja.model.UserActions;
+import com.juja.model.UserActionsDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.SQLException;
 import java.util.*;
 
 @Component
@@ -17,6 +19,9 @@ public abstract class ServiceImpl implements Service {
 
     public abstract DatabaseManager getManager();
 
+    @Autowired
+    private UserActionsDao userActions;
+
     @Override
     public List<String> commandsList() {
         return commands;
@@ -26,6 +31,7 @@ public abstract class ServiceImpl implements Service {
         DatabaseManager manager = getManager();
         try {
             manager.connect(dbName, userName, password);
+            userActions.log(userName, dbName, "CONNECT");
         } catch (Exception e) {
             throw new ServiceException(e);
         }
@@ -50,6 +56,8 @@ public abstract class ServiceImpl implements Service {
         } catch (Exception e) {
             //throw new ServiceException(e);
         }
+        userActions.log(manager.getUserName(), manager.getDatabaseName(),
+                "FIND(" + tableName + ")");
         return result;
     }
 
@@ -57,7 +65,7 @@ public abstract class ServiceImpl implements Service {
     public void clear(DatabaseManager manager, String tableName) throws ServiceException {
         try {
             manager.clear(tableName);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ServiceException(e);
         }
     }
@@ -65,8 +73,10 @@ public abstract class ServiceImpl implements Service {
     @Override
     public Set<String> getTableNames(DatabaseManager manager) throws ServiceException {
         try {
+            userActions.log(manager.getUserName(), manager.getDatabaseName(),
+                    "TABLES");
             return manager.getTableNames();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ServiceException(e);
         }
     }
@@ -75,7 +85,7 @@ public abstract class ServiceImpl implements Service {
     public List<String> getTableHead(String tableName) throws ServiceException {
         try {
             return getManager().getTableHead(tableName);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ServiceException(e);
         }
     }
@@ -84,7 +94,7 @@ public abstract class ServiceImpl implements Service {
     public List<Map<String, Object>> getTableData(String tableName) throws ServiceException{
         try {
             return getManager().getTableData(tableName);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ServiceException(e);
         }
     }
@@ -93,12 +103,21 @@ public abstract class ServiceImpl implements Service {
     public void update(String tableName, int id, Map<String, Object> newValue) throws ServiceException {
         try {
             getManager().update(tableName, id, newValue);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ServiceException(e);
         }
     }
 
     public void setCommands(List<String> commands) {
         this.commands = commands;
+    }
+
+
+    @Override
+    public List<UserActions> getAllFor(String userName) {
+        if (userName == null || userName.trim().isEmpty()) {
+            throw new IllegalArgumentException("User name cant be null or empty");
+        }
+        return userActions.getAllFor(userName);
     }
 }

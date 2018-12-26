@@ -1,6 +1,7 @@
 package com.juja.service;
 
 import com.juja.model.DatabaseManager;
+import com.juja.model.UserActions;
 
 import java.util.List;
 import java.util.Map;
@@ -27,4 +28,6 @@ public interface Service {
     List<Map<String, Object>> getTableData(String tableName) throws ServiceException;
 
     void update(String tableName, int id, Map<String, Object> newValue) throws ServiceException;
+
+    List<UserActions> getAllFor(String userName);
 }

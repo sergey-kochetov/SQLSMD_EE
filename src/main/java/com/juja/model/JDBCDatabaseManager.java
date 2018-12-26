@@ -29,8 +29,10 @@ public class JDBCDatabaseManager implements DatabaseManager  {
     private static final String UPDATE_TABLE = "UPDATE %s SET %s WHERE %s= ?";
 
     private Connection connection;
+    private String database;
+    private String userName;
 
-    @Override
+
     public void defaultConnect() throws SQLException {
         if (!isConnected()) {
             connection = DriverManager.getConnection(
@@ -41,38 +43,42 @@ public class JDBCDatabaseManager implements DatabaseManager  {
     }
 
     @Override
-    public void connect(String database, String userName, String password) throws SQLException {
+    public void connect(String database, String userName, String password) {
+        this.database = database;
+        this.userName = userName;
         try {
             connection = DriverManager.getConnection(
                     URL_CONNECT_DB + database, userName, password);
-        } catch (SQLException e) {
-            throw new SQLException(
+        } catch (Exception e) {
+            throw new RuntimeException(
                     String.format(ConfigMsg.getProperty("db.err.format"),
                             database, userName), e);
         }
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() {
         checkConnection();
         return connection;
     }
 
     @Override
-    public void disconnect() throws SQLException {
+    public void disconnect() {
         if (connection != null) {
-            connection.close();
+            try {
+                connection.close();
+            } catch (Exception ignored) {}
         }
     }
 
     @Override
-    public List<Map<String, Object>> getTableData(String tableName) throws SQLException {
+    public List<Map<String, Object>> getTableData(String tableName) {
         checkConnection();
+        List<Map<String, Object>> result = new LinkedList<>();
         try (  Statement stmt = connection.createStatement();
                ResultSet rs = stmt.executeQuery("SELECT * FROM public." + tableName);
         ) {
             ResultSetMetaData rsmd = rs.getMetaData();
-            List<Map<String, Object>> result = new LinkedList<>();
             while (rs.next()) {
                 Map<String, Object> dataSet = UtilsCommand.getDataMap();
                 for (int i = 1; i <= rsmd.getColumnCount(); i++) {
@@ -81,100 +87,109 @@ public class JDBCDatabaseManager implements DatabaseManager  {
                 result.add(dataSet);
             }
             return result;
+        } catch (Exception e) {
+            return result;
         }
     }
 
     @Override
-    public int getSize(String tableName) throws SQLException {
+    public int getSize(String tableName) {
         checkConnection();
         try (Statement  stmt = connection.createStatement();
              ResultSet rsCount = stmt.executeQuery(SELECT_SIZE_TABLE + tableName);
         ) {
             rsCount.next();
             return rsCount.getInt(1);
+        } catch (Exception e) {
+            return 0;
         }
     }
 
     @Override
-    public Set<String> getTableNames() throws SQLException {
+    public Set<String> getTableNames() {
         checkConnection();
+        Set<String> tables = UtilsCommand.getDataSet();
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(SELECT_TABLE_NAMES);
         ) {
-            Set<String> tables = UtilsCommand.getDataSet();
             while (rs.next()) {
                 tables.add(rs.getString("table_name"));
             }
-            return tables;
+        } catch (Exception ignored) {
         }
+        return tables;
     }
 
     @Override
-    public void clear(String tableName) throws SQLException {
+    public void clear(String tableName) {
         checkConnection();
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(String.format(CLEAR_TABLE, tableName));
+        } catch (Exception ignored) {
         }
     }
 
     @Override
-    public void drop(String tableName) throws SQLException {
+    public void drop(String tableName) {
         checkConnection();
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(String.format(DROP_TABLE, tableName));
-        }
+        } catch (Exception ignored) {}
     }
     @Override
-    public void delete(String tableName,  Map<String, Object> delValue) throws SQLException {
+    public void delete(String tableName,  Map<String, Object> delValue) {
         checkConnection();
         String delete = getNameValuesFormated(delValue, "%s='%s'");
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(String.format(DELETE_DATA, tableName, delete));
-        }
+        } catch (Exception ignored) {}
     }
 
     @Override
-    public void create(String tableName, List<String> input) throws SQLException {
+    public void create(String tableName, List<String> input) {
         checkConnection();
         String columnsName = input.stream()
                 .collect(Collectors.joining(", "));
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(String.format(SQL_CREATE_TABLE, tableName, columnsName));
-        }
+        } catch (Exception ignored) {}
     }
 
     @Override
-    public void insert(String tableName, Map<String, Object> input) throws SQLException {
+    public void insert(String tableName, Map<String, Object> input) {
         checkConnection();
         String tableNames = getNameFormated(input, "%s");
         String values = getValuesFormated(input, "'%s'");
         try ( Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(String.format(SQL_INSERT, tableName, tableNames, values));
-        }
+        } catch (Exception ignored) {}
     }
 
     @Override
-    public void update(String tableName, int id, Map<String, Object> newValue) throws SQLException {
+    public void update(String tableName, int id, Map<String, Object> newValue) {
         checkConnection();
-        String tableNames = getNameFormated(newValue, "%s = ?");
-        String nameId = getTableHead(tableName)
-                .stream()
-                .findFirst()
-                .get();
-        String sql = String.format(UPDATE_TABLE, tableName, tableNames, nameId);
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            int index = 1;
-            for (Object value : newValue.values()) {
-                ps.setObject(index, value);
-                index++;
+        try {
+            String tableNames = getNameFormated(newValue, "%s = ?");
+            String nameId = getTableHead(tableName)
+                    .stream()
+                    .findFirst()
+                    .get();
+            String sql = String.format(UPDATE_TABLE, tableName, tableNames, nameId);
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                int index = 1;
+                for (Object value : newValue.values()) {
+                    ps.setObject(index, value);
+                    index++;
+                }
+                ps.setObject(index, id);
+                ps.executeUpdate();
             }
-            ps.setObject(index, id);
-            ps.executeUpdate();
-        }
+        } catch (Exception ignored) {}
+
     }
 
     @Override
-    public List<String> getTableHead(String tableName) throws SQLException {
+    public List<String> getTableHead(String tableName) {
         checkConnection();
         try(PreparedStatement stmt = connection.prepareStatement(SQL_GET_TABLE_COLUMNS)) {
             stmt.setString(1, "public");
@@ -193,6 +208,16 @@ public class JDBCDatabaseManager implements DatabaseManager  {
     @Override
     public boolean isConnected() {
         return connection != null;
+    }
+
+    @Override
+    public String getDatabaseName() {
+        return database;
+    }
+
+    @Override
+    public String getUserName() {
+        return userName;
     }
 
     private String getNameFormated(Map<String, Object> input, String format) {
@@ -218,9 +243,9 @@ public class JDBCDatabaseManager implements DatabaseManager  {
                 .collect(Collectors.joining(", "));
     }
 
-    private void checkConnection() throws SQLException {
+    private void checkConnection() {
         if (connection == null) {
-            throw new SQLException(ConfigMsg.getProperty("db.noconnect"));
+            throw new RuntimeException(ConfigMsg.getProperty("db.noconnect"));
         }
     }
 }

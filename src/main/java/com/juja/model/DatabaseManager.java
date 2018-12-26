@@ -10,33 +10,35 @@ public interface DatabaseManager {
 
     DatabaseManager NULL = new NullDatabaseManager();
 
-    void defaultConnect() throws SQLException;
+    void connect(String database, String userName, String password);
 
-    void connect(String database, String userName, String password) throws SQLException;
+    Connection getConnection();
 
-    Connection getConnection() throws SQLException;
+    int getSize(String tableName);
 
-    int getSize(String tableName) throws SQLException;
+    Set<String> getTableNames();
 
-    Set<String> getTableNames() throws SQLException;
+    List<String> getTableHead(String tableName);
 
-    List<String> getTableHead(String tableName) throws SQLException;
+    List<Map<String, Object>> getTableData(String tableName);
 
-    List<Map<String, Object>> getTableData(String tableName) throws SQLException;
+    void clear(String tableName);
 
-    void clear(String tableName) throws SQLException;
+    void drop(String tableName);
 
-    void drop(String tableName) throws SQLException;
+    void delete(String tableName, Map<String, Object> delValue);
 
-    void delete(String tableName, Map<String, Object> delValue) throws SQLException;
+    void create(String tableName, List<String> input);
 
-    void create(String tableName, List<String> input) throws SQLException;
+    void insert(String tableName, Map<String, Object> input);
 
-    void insert(String tableName, Map<String, Object> input) throws SQLException;
+    void update(String tableName, int id, Map<String, Object> newValue);
 
-    void update(String tableName, int id, Map<String, Object> newValue) throws SQLException;
-
-    void disconnect() throws SQLException;
+    void disconnect();
 
     boolean isConnected();
+
+    String getDatabaseName();
+
+    String getUserName();
 }

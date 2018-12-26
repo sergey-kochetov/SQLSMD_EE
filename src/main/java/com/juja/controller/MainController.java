@@ -6,11 +6,10 @@ import com.juja.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -34,7 +33,8 @@ public class MainController {
                        HttpSession session, Model model) throws ServiceException {
         DatabaseManager manager = getManager(session);
         if (manager == null) {
-            session.setAttribute("from-page", "/find?table=" + tableName);
+            session.setAttribute("from-page", "/find");
+            model.addAttribute("from-page", "/find");
             return "redirect:connect";
         }
         model.addAttribute("tableData", service.find(manager, tableName));
@@ -82,6 +82,7 @@ public class MainController {
     public String error() {
         return "error";
     }
+
     @RequestMapping(value = "/tables", method = RequestMethod.GET)
     public String tables(Model model, HttpSession session) throws ServiceException {
         DatabaseManager manager = getManager(session);
@@ -93,6 +94,14 @@ public class MainController {
         model.addAttribute("tables", service.getTableNames(manager));
 
         return "tables";
+    }
+
+    @RequestMapping(value = "/actions/{userName}", method = RequestMethod.GET)
+    public String tables(Model model,
+                         @PathVariable(value = "userName") String userName,
+                         HttpSession session) throws ServiceException {
+        model.addAttribute("tables", service.getAllFor(userName));
+        return "actions";
     }
 
     private DatabaseManager getManager(HttpSession session) {
