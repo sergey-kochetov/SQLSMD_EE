@@ -1,10 +1,21 @@
-package com.juja.model;
+package com.juja.model.entity;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "user_actions", schema = "public")
 public class UserActions {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
+    @Column(name = "user_name")
     private String userName;
+
+    @Column(name = "db_name")
     private String dbName;
+
+    @Column(name = "action")
     private String action;
 
     public UserActions() {

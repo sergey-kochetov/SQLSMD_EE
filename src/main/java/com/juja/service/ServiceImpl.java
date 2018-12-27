@@ -1,8 +1,8 @@
 package com.juja.service;
 
 import com.juja.model.DatabaseManager;
-import com.juja.model.UserActions;
-import com.juja.model.UserActionsDao;
+import com.juja.model.entity.UserActions;
+import com.juja.model.UserActionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public abstract class ServiceImpl implements Service {
     public abstract DatabaseManager getManager();
 
     @Autowired
-    private UserActionsDao userActions;
+    private UserActionsRepository userActions;
 
     @Override
     public List<String> commandsList() {
@@ -31,7 +31,8 @@ public abstract class ServiceImpl implements Service {
         DatabaseManager manager = getManager();
         try {
             manager.connect(dbName, userName, password);
-            userActions.log(userName, dbName, "CONNECT");
+            UserActions user = new UserActions(manager.getUserName(), manager.getDatabaseName(),"TABLES");
+            userActions.save(user);
         } catch (Exception e) {
             throw new ServiceException(e);
         }
@@ -56,8 +57,8 @@ public abstract class ServiceImpl implements Service {
         } catch (Exception e) {
             //throw new ServiceException(e);
         }
-        userActions.log(manager.getUserName(), manager.getDatabaseName(),
-                "FIND(" + tableName + ")");
+        UserActions user = new UserActions(manager.getUserName(), manager.getDatabaseName(),"TABLES");
+        userActions.save(user);
         return result;
     }
 
@@ -73,8 +74,8 @@ public abstract class ServiceImpl implements Service {
     @Override
     public Set<String> getTableNames(DatabaseManager manager) throws ServiceException {
         try {
-            userActions.log(manager.getUserName(), manager.getDatabaseName(),
-                    "TABLES");
+            UserActions user = new UserActions(manager.getUserName(), manager.getDatabaseName(),"TABLES");
+            userActions.save(user);
             return manager.getTableNames();
         } catch (Exception e) {
             throw new ServiceException(e);
@@ -118,6 +119,6 @@ public abstract class ServiceImpl implements Service {
         if (userName == null || userName.trim().isEmpty()) {
             throw new IllegalArgumentException("User name cant be null or empty");
         }
-        return userActions.getAllFor(userName);
+        return userActions.findByUserName(userName);
     }
 }

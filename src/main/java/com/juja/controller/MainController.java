@@ -98,9 +98,9 @@ public class MainController {
 
     @RequestMapping(value = "/actions/{userName}", method = RequestMethod.GET)
     public String tables(Model model,
-                         @PathVariable(value = "userName") String userName,
-                         HttpSession session) throws ServiceException {
-        model.addAttribute("tables", service.getAllFor(userName));
+                         @PathVariable(value = "userName") String userName) throws ServiceException
+    {
+        model.addAttribute("actions", service.getAllFor(userName));
         return "actions";
     }
 
