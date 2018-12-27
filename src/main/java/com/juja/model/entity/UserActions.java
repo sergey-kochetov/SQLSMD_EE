@@ -14,6 +14,8 @@ public class UserActions {
 
     @Column(name = "db_name")
     private String dbName;
+//    @Column(name = "database_id")
+//    private Database database;
 
     @Column(name = "action")
     private String action;
