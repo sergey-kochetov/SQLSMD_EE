@@ -5,7 +5,7 @@
         <title>SQLCmd</title>
     </head>
     <body>
-        Error ${message}.<br>
+        Йойкс! Что-то пошло не так: ${message}<br>
         <%@include file="footer.jsp" %>
     </body>
 </html>

@@ -1,8 +1,9 @@
 package com.juja.service;
 
+import com.juja.model.DataSet;
 import com.juja.model.DatabaseManager;
-import com.juja.model.entity.UserActions;
-import com.juja.model.UserActionsRepository;
+import com.juja.model.UserActionRepository;
+import com.juja.model.entity.UserAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,114 +12,67 @@ import java.util.*;
 @Component
 public abstract class ServiceImpl implements Service {
 
-    private List<String> commands = new LinkedList<>(Arrays.asList(
-            "menu", "connect", "find", "error", "help", "success", "tables"));
-
-    public ServiceImpl() {
-    }
-
-    public abstract DatabaseManager getManager();
+    protected abstract DatabaseManager getManager();
 
     @Autowired
-    private UserActionsRepository userActions;
+    private UserActionRepository userActions;
 
     @Override
     public List<String> commandsList() {
-        return commands;
+        return Arrays.asList("help", "list");
     }
+
     @Override
-    public DatabaseManager connect(String dbName, String userName, String password) throws ServiceException {
+    public DatabaseManager connect(String databaseName, String userName, String password) {
         DatabaseManager manager = getManager();
-        try {
-            manager.connect(dbName, userName, password);
-            UserActions user = new UserActions(manager.getUserName(), manager.getDatabaseName(),"TABLES");
-            userActions.save(user);
-        } catch (Exception e) {
-            throw new ServiceException(e);
-        }
+        manager.connect(databaseName, userName, password);
+        userActions.save(new UserAction(userName, databaseName, "CONNECT"));
         return manager;
     }
 
     @Override
-    public List<List<String>> find(DatabaseManager manager, String tableName) throws ServiceException {
+    public List<List<String>> find(DatabaseManager manager, String tableName) {
         List<List<String>> result = new LinkedList<>();
-        try {
-            List<String> tableColumns = manager.getTableHead(tableName);
-            List<Map<String, Object>> tableData = manager.getTableData(tableName);
 
-            result.add(tableColumns);
-            for (Map<String, Object> map : tableData) {
-                List<String> current = new LinkedList<String>();
-                for (Object value : map.values()) {
-                    current.add(value.toString());
+        List<String> columns = new LinkedList<>(manager.getTableColumns(tableName));
+        List<DataSet> tableData = manager.getTableData(tableName);
+
+        result.add(columns);
+        for (DataSet dataSet : tableData) {
+            List<String> row = new ArrayList<>(columns.size());
+            result.add(row);
+            for (String column : columns) {
+                Object value = dataSet.get(column);
+                if (value == null) {
+                    throw new IllegalStateException(String.format(
+                            "Ожидалось колонка с именем %s но ее нет, а есть %s",
+                            column, dataSet));
                 }
-                result.add(current);
+                row.add(value.toString());
             }
-        } catch (Exception e) {
-            //throw new ServiceException(e);
         }
-        UserActions user = new UserActions(manager.getUserName(), manager.getDatabaseName(),"TABLES");
-        userActions.save(user);
+
+        userActions.save(new UserAction(manager.getUserName(), manager.getDatabaseName(),
+                "FIND(" + tableName +  ")"));
+
         return result;
     }
 
     @Override
-    public void clear(DatabaseManager manager, String tableName) throws ServiceException {
-        try {
-            manager.clear(tableName);
-        } catch (Exception e) {
-            throw new ServiceException(e);
-        }
+    public Set<String> tables(DatabaseManager manager) {
+        UserAction action = new UserAction(manager.getUserName(),
+                manager.getDatabaseName(), "TABLES");
+        userActions.save(action);
+
+        return manager.getTableNames();
     }
 
     @Override
-    public Set<String> getTableNames(DatabaseManager manager) throws ServiceException {
-        try {
-            UserActions user = new UserActions(manager.getUserName(), manager.getDatabaseName(),"TABLES");
-            userActions.save(user);
-            return manager.getTableNames();
-        } catch (Exception e) {
-            throw new ServiceException(e);
+    public List<UserAction> getAllFor(String userName) {
+        if (userName == null) {
+            throw new IllegalArgumentException("User name cant be null!");
         }
-    }
 
-    @Override
-    public List<String> getTableHead(String tableName) throws ServiceException {
-        try {
-            return getManager().getTableHead(tableName);
-        } catch (Exception e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public List<Map<String, Object>> getTableData(String tableName) throws ServiceException{
-        try {
-            return getManager().getTableData(tableName);
-        } catch (Exception e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public void update(String tableName, int id, Map<String, Object> newValue) throws ServiceException {
-        try {
-            getManager().update(tableName, id, newValue);
-        } catch (Exception e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public void setCommands(List<String> commands) {
-        this.commands = commands;
-    }
-
-
-    @Override
-    public List<UserActions> getAllFor(String userName) {
-        if (userName == null || userName.trim().isEmpty()) {
-            throw new IllegalArgumentException("User name cant be null or empty");
-        }
         return userActions.findByUserName(userName);
     }
 }

@@ -8,15 +8,15 @@
         <table border="1">
             <c:forEach items="${actions}" var="userAction">
                 <tr>
-                        <td>
-                            ${userAction.userName}
-                        </td>
-                        <td>
-                            ${userAction.dbName}
-                        </td>
-                        <td>
-                            ${userAction.action}
-                        </td>
+                    <td>
+                        ${userAction.userName}
+                    </td>
+                    <td>
+                        ${userAction.dbName}
+                    </td>
+                    <td>
+                        ${userAction.action}
+                    </td>
                 </tr>
             </c:forEach>
         </table>

@@ -2,14 +2,14 @@ package com.juja.controller;
 
 import com.juja.model.DatabaseManager;
 import com.juja.service.Service;
-import com.juja.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -20,7 +20,7 @@ public class MainController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main() {
-        return "redirect:/help";
+        return "redirect:/menu";
     }
 
     @RequestMapping(value = "/help", method = RequestMethod.GET)
@@ -28,41 +28,26 @@ public class MainController {
         return "help";
     }
 
-    @RequestMapping(value = "/find", params = { "table" }, method = RequestMethod.GET)
-    public String find(@RequestParam(value = "table") String tableName,
-                       HttpSession session, Model model) throws ServiceException {
-        DatabaseManager manager = getManager(session);
-        if (manager == null) {
-            session.setAttribute("from-page", "/find");
-            model.addAttribute("from-page", "/find");
-            return "redirect:connect";
-        }
-        model.addAttribute("tableData", service.find(manager, tableName));
-        return "find";
-    }
-
     @RequestMapping(value = "/connect", method = RequestMethod.GET)
     public String connect(HttpSession session, Model model) {
-        DatabaseManager manager = getManager(session);
         String page = (String) session.getAttribute("from-page");
         session.removeAttribute("from-page");
         model.addAttribute("connection", new Connection(page));
 
-        if (manager == null) {
+        if (getManager(session) == null) {
             return "connect";
         } else {
             return "menu";
         }
     }
+
     @RequestMapping(value = "/connect", method = RequestMethod.POST)
     public String connecting(@ModelAttribute("connection") Connection connection,
                              HttpSession session, Model model)
     {
         try {
-            DatabaseManager manager = service.connect(
-                    connection.getDbname(),
-                    connection.getUsername(),
-                    connection.getPassword());
+            DatabaseManager manager = service.connect(connection.getDbName(),
+                    connection.getUserName(), connection.getPassword());
             session.setAttribute("db_manager", manager);
             return "redirect:" + connection.getFromPage();
         } catch (Exception e) {
@@ -72,40 +57,53 @@ public class MainController {
         }
     }
 
+    @RequestMapping(value = "/tables/{table}", method = RequestMethod.GET)
+    public String tables(Model model,
+                         @PathVariable(value = "table") String table,
+                         HttpSession session) {
+        DatabaseManager manager = getManager(session);
+
+        if (manager == null) {
+            session.setAttribute("from-page", "/tables/" + table);
+            return "redirect:/connect";
+        }
+
+        model.addAttribute("table", service.find(manager, table));
+
+        return "find";
+    }
+
+    @RequestMapping(value = "/actions/{userName}", method = RequestMethod.GET)
+    public String actions(Model model,
+                          @PathVariable(value = "userName") String userName) {
+        model.addAttribute("actions", service.getAllFor(userName));
+
+        return "actions";
+    }
+
     @RequestMapping(value = "/menu", method = RequestMethod.GET)
     public String menu(Model model) {
         model.addAttribute("items", service.commandsList());
         return "menu";
     }
 
-    @RequestMapping(value = "/error", method = RequestMethod.GET)
-    public String error() {
-        return "error";
-    }
-
-    @RequestMapping(value = "/tables", method = RequestMethod.GET)
-    public String tables(Model model, HttpSession session) throws ServiceException {
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String list(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
 
         if (manager == null) {
-           session.setAttribute("from-page", "/tables");
+            session.setAttribute("from-page", "/list");
             return "redirect:/connect";
         }
-        model.addAttribute("tables", service.getTableNames(manager));
 
-        return "tables";
-    }
-
-    @RequestMapping(value = "/actions/{userName}", method = RequestMethod.GET)
-    public String tables(Model model,
-                         @PathVariable(value = "userName") String userName) throws ServiceException
-    {
-        model.addAttribute("actions", service.getAllFor(userName));
-        return "actions";
+        model.addAttribute("list", service.tables(manager));
+        return "list";
     }
 
     private DatabaseManager getManager(HttpSession session) {
         return (DatabaseManager) session.getAttribute("db_manager");
     }
 
+    // TODO со странички http://localhost:8080/sqlcmd/tables/user
+    // мереходим на menu то видим ошибку
 }

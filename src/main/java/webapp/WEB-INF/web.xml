@@ -11,6 +11,11 @@
         <param-value>/WEB-INF/application-context.xml</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>contextClass</param-name>
+        <param-value>org.springframework.web.context.support.XmlWebApplicationContext</param-value>
+    </context-param>
+
     <listener>
         <listener-class>
             org.springframework.web.context.ContextLoaderListener
@@ -20,8 +25,8 @@
     <servlet>
         <servlet-name>main</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <!--init-param> ??? ???????? ? ???????????? ?????? ????? ???????
-            <param-name>contectConfigLocation</param-name>
+        <!--init-param> to change setvlet config location
+            <param-name>contextConfigLocation</param-name>
             <param-value>/WEB-INF/servlet-context.xml</param-value>
         </init-param-->
     </servlet>

@@ -3,7 +3,7 @@ package com.juja.controller;
 public class Connection {
 
     private String dbname;
-    private String username;
+    private String userName;
     private String password;
     private String fromPage;
 
@@ -14,20 +14,20 @@ public class Connection {
     public Connection() {
     }
 
-    public String getDbname() {
+    public String getDbName() {
         return dbname;
     }
 
-    public void setDbname(String dbname) {
+    public void setDbName(String dbname) {
         this.dbname = dbname;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {

@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "user_actions", schema = "public")
-public class UserActions {
+public class UserAction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -20,11 +20,11 @@ public class UserActions {
     @Column(name = "action")
     private String action;
 
-    public UserActions() {
+    public UserAction() {
         // do nothing
     }
 
-    public UserActions(String userName, String dbName, String action) {
+    public UserAction(String userName, String dbName, String action) {
         this.userName = userName;
         this.dbName = dbName;
         this.action = action;
