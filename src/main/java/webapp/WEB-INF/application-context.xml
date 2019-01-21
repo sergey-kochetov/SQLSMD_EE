@@ -14,13 +14,13 @@
                            http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
     <context:annotation-config/>
-    <context:component-scan base-package="com.juja"/>
-    <jpa:repositories base-package="com.juja"
+    <context:component-scan base-package="com.juja.sqlcmd_ee"/>
+    <jpa:repositories base-package="com.juja.sqlcmd_ee"
                       entity-manager-factory-ref="emf"/>
 
     <bean id="emf"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="packagesToScan" value="com.juja.model.entity" />
+        <property name="packagesToScan" value="com.juja.sqlcmd_ee.model.entity" />
         <property name="dataSource" ref="logDataSource" />
 
         <property name="jpaProperties">
@@ -42,7 +42,7 @@
         <property name="dataSource" ref="logDataSource" />
     </bean>
 
-    <bean id="service" class="com.juja.service.ServiceImpl">
+    <bean id="service" class="com.juja.sqlcmd_ee.service.ServiceImpl">
         <lookup-method name="getManager" bean="JDBCDatabaseManager"/>
     </bean>
 

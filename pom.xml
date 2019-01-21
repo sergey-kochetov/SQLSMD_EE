@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.juja</groupId>
-    <artifactId>sqlsmd</artifactId>
+    <artifactId>sqlcmd_ee</artifactId>
     <version>1.0</version>
 
     <packaging>war</packaging>
-    <name>sqlsmd</name>
-    <description>sqlsmd</description>
+    <name>sqlcmd_ee</name>
+    <description>sqlcmd_ee</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -126,8 +126,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 
