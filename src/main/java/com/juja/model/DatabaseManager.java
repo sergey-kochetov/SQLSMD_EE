@@ -8,23 +8,17 @@ import java.util.Set;
 
 public interface DatabaseManager {
 
-    DatabaseManager NULL = new NullDatabaseManager();
-
-    void defaultConnect() throws SQLException;
-
     void connect(String database, String userName, String password) throws SQLException;
 
-    Connection getConnection() throws SQLException;
+    Set<Map<String, Object>> getTableData(String tableName) throws SQLException;
 
     int getSize(String tableName) throws SQLException;
 
-    Set<String> getTableNames() throws SQLException;
+    Set<String> getTableHead() throws SQLException;
 
-    List<String> getTableHead(String tableName) throws SQLException;
+    Set<String> getTableColumns(String tableName) throws SQLException;
 
-    List<Map<String, Object>> getTableData(String tableName) throws SQLException;
-
-    void clear(String tableName) throws SQLException;
+    void truncate(String tableName) throws SQLException;
 
     void drop(String tableName) throws SQLException;
 
@@ -35,8 +29,6 @@ public interface DatabaseManager {
     void insert(String tableName, Map<String, Object> input) throws SQLException;
 
     void update(String tableName, int id, Map<String, Object> newValue) throws SQLException;
-
-    void disconnect() throws SQLException;
 
     boolean isConnected();
 }
