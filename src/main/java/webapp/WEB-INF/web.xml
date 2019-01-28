@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
     version="2.4">
 
-    <display-name>SQLCmd</display-name>
+    <display-name>sqlcmd_ee</display-name>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -35,5 +35,11 @@
         <servlet-name>main</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
+    <welcome-file-list>
+        <!--<welcome-file>index.html</welcome-file>-->
+        <!--<welcome-file>index.htm</welcome-file>-->
+        <welcome-file>help.jsp</welcome-file>
+    </welcome-file-list>
 
 </web-app>
