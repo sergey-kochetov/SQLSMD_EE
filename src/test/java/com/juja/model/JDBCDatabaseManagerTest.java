@@ -91,10 +91,10 @@ public class JDBCDatabaseManagerTest extends DatabaseManagerTest {
     public void testGetColumnNames() throws SQLException {
         // given
         String customer = "customer";
-        manager.truncate(customer);
+        manager.clear(customer);
 
         // when
-        Set<String> columnNames = manager.getTableColumns(customer);
+        List<String> columnNames = manager.getTableHead(customer);
 
         // then
         assertEquals("[c_id, c_name, c_password]", columnNames.toString());
