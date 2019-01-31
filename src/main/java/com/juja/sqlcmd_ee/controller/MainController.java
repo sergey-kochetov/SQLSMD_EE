@@ -1,6 +1,7 @@
 package com.juja.sqlcmd_ee.controller;
 
-import com.juja.sqlcmd_ee.model.DatabaseManager;
+import com.juja.sqlcmd_ee.dao.DatabaseManager;
+import com.juja.sqlcmd_ee.entity.Connection;
 import com.juja.sqlcmd_ee.service.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

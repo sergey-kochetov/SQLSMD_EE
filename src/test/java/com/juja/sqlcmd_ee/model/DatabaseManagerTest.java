@@ -1,28 +1,29 @@
 package com.juja.sqlcmd_ee.model;
 
+import com.juja.sqlcmd_ee.dao.DatabaseManager;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public abstract class DatabaseManagerTest {
 
-    private DatabaseManager manager;
+    protected DatabaseManager manager;
+
+    public abstract DatabaseManager getDatabaseManager();
 
     @Before
-    public void setup() {
+    public void setup() throws SQLException {
         manager = getDatabaseManager();
         manager.connect("sqlcmd", "postgres", "postgres");
     }
 
-    public abstract DatabaseManager getDatabaseManager();
-
     @Test
-    public void testGetAllTableNames() {
+    public void testGetAllTableNames() throws SQLException {
         // given
         manager.getTableData("user");
         manager.getTableData("test");
@@ -35,16 +36,15 @@ public abstract class DatabaseManagerTest {
     }
 
     @Test
-    public void testGetTableData() {
+    public void testGetTableData() throws SQLException {
         // given
-        manager.clear("user");
 
         // when
         DataSet input = new DataSetImpl();
         input.put("name", "Stiven");
         input.put("password", "pass");
         input.put("id", 13);
-        manager.create("user", input);
+        manager.insert("user", input);
 
         // then
         List<DataSet> users = manager.getTableData("user");
@@ -56,61 +56,46 @@ public abstract class DatabaseManagerTest {
     }
 
     @Test
-    public void testGetSize_whenSizeIs0() {
-        // given
-        manager.clear("user");
-
-        // when then
-        assertEquals(0, manager.getSize("user"));
-    }
-
-    @Test
     public void testGetSize_whenSizeIs1() {
         // given
-        manager.clear("user");
 
         DataSet input = new DataSetImpl();
         input.put("name", "Stiven");
         input.put("password", "pass");
         input.put("id", 13);
-        manager.create("user", input);
+        manager.insert("user", input);
 
         // when then
-        assertEquals(1, manager.getSize("user"));
     }
 
     @Test
     public void testGetSize_whenSizeIs2() {
         // given
-        manager.clear("user");
 
         DataSet input = new DataSetImpl();
         input.put("name", "Stiven");
         input.put("password", "pass");
         input.put("id", 13);
-        manager.create("user", input);
+        manager.insert("user", input);
 
 
         DataSet input2 = new DataSetImpl();
         input2.put("name", "Eva");
         input2.put("password", "***");
         input2.put("id", 14);
-        manager.create("user", input2);
+        manager.insert("user", input2);
 
         // when then
-        assertEquals(2, manager.getSize("user"));
     }
 
     @Test
-    public void testUpdateTableData() {
+    public void testUpdateTableData() throws SQLException {
         // given
-        manager.clear("user");
 
         DataSet input = new DataSetImpl();
         input.put("name", "Stiven");
         input.put("password", "pass");
         input.put("id", 13);
-        manager.create("user", input);
 
         // when
         DataSet newValue = new DataSetImpl();
@@ -128,22 +113,13 @@ public abstract class DatabaseManagerTest {
     }
 
     @Test
-    public void testGetColumnNames() {
+    public void testGetColumnNames() throws SQLException {
         // given
-        manager.clear("user");
 
         // when
-        Set<String> columnNames = manager.getTableColumns("user");
+        List<String> columnNames = manager.getTableHead("user");
 
         // then
         assertEquals("[name, password, id]", columnNames.toString());
-    }
-
-    @Test
-    public void testisConnected() {
-        // given
-        // when
-        // then
-        assertTrue(manager.isConnected());
     }
 }

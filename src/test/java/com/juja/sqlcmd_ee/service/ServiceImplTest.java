@@ -2,7 +2,7 @@ package com.juja.sqlcmd_ee.service;
 
 import com.juja.sqlcmd_ee.model.DataSet;
 import com.juja.sqlcmd_ee.model.DataSetImpl;
-import com.juja.sqlcmd_ee.model.DatabaseManager;
+import com.juja.sqlcmd_ee.dao.DatabaseManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

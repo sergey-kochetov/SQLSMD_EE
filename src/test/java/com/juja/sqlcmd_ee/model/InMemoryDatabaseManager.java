@@ -1,5 +1,7 @@
 package com.juja.sqlcmd_ee.model;
 
+import com.juja.sqlcmd_ee.dao.DatabaseManager;
+
 import java.util.*;
 
 public class InMemoryDatabaseManager implements DatabaseManager {
@@ -12,6 +14,15 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public void createTable(String tableName) {
+
+    }
+
+    @Override
+    public void insert(String tableName, DataSet input) {
+
+    }
+
     public int getSize(String tableName) {
         return get(tableName).size();
     }
@@ -26,7 +37,6 @@ public class InMemoryDatabaseManager implements DatabaseManager {
         // do nothing
     }
 
-    @Override
     public void clear(String tableName) {
         get(tableName).clear();
     }
@@ -38,7 +48,6 @@ public class InMemoryDatabaseManager implements DatabaseManager {
         return tables.get(tableName);
     }
 
-    @Override
     public void create(String tableName, DataSet input) {
         get(tableName).add(input);
     }
@@ -53,21 +62,33 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public Set<String> getTableColumns(String tableName) {
-        return new LinkedHashSet<String>(Arrays.asList("name", "password", "id"));
+    public void delete(String tableName, int id) {
+
     }
 
     @Override
+    public void addColumn(String tableName, String columnName, String dataType) {
+
+    }
+
+    @Override
+    public void dropColumn(String tableName, String columnName) {
+
+    }
+
+    @Override
+    public List<String> getTableHead(String tableName) {
+        return new LinkedList<>(Arrays.asList("name", "password", "id"));
+    }
+
     public boolean isConnected() {
         return true;
     }
 
-    @Override
     public String getDatabaseName() {
         return null;
     }
 
-    @Override
     public String getUserName() {
         return null;
     }
