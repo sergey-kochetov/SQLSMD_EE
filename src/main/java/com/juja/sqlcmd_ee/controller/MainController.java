@@ -16,14 +16,12 @@ public class MainController {
     @Autowired
     private MessageRepo messageRepo;
 
-    @GetMapping("/name")
-    public String view(@RequestParam(value = "name", required = false, defaultValue = "noname")
-                                   String name, Map<String, Object> model) {
-        model.put("name", "Привет " + name);
+    @GetMapping("/")
+    public String view() {
         return "index";
     }
 
-    @GetMapping
+    @GetMapping("/main")
     public String main(Map<String, Object> model) {
         model.put("messages", messageRepo.findAll());
         return "main";
