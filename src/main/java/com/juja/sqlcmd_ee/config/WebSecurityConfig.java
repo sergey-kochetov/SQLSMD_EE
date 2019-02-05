@@ -1,17 +1,12 @@
 package com.juja.sqlcmd_ee.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import javax.sql.DataSource;
 
@@ -54,7 +49,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
                 .passwordEncoder(NoOpPasswordEncoder.getInstance())
-                .usersByUsernameQuery("SELECT username, password, active FROM customer WHERE username=?")
-                .authoritiesByUsernameQuery("SELECT c.username, cr.roles FROM customer c INNER JOIN customer_role cr ON c.id = cr.customer_id  WHERE c.username=?");
+                .usersByUsernameQuery(
+                        "SELECT username, password, active " +
+                        "FROM customer WHERE username=?")
+                .authoritiesByUsernameQuery(
+                        "SELECT c.username, cr.roles " +
+                        "FROM customer c INNER JOIN customer_role cr ON c.id=cr.customer_id  " +
+                        "WHERE c.username=?");
+
     }
 }
