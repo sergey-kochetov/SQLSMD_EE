@@ -9,6 +9,9 @@
     <#list roles as role>
     <div>
         <label><input type="checkbox" name="${role}" ${customer.roles?seq_contains(role)?string("checked", "")}>${role}</label>
+        <!--<select id="roles" name="roles">-->
+            <!--<#list roles as role><option value="${role}" selected="selected">${role}</option></#list>-->
+        <!--</select>﻿-->
     </div>
     </#list>
     <button type="submit">save</button>

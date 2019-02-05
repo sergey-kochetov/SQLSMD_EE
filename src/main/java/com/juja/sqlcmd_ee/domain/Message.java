@@ -19,6 +19,8 @@ public class Message {
     @JoinColumn(name = "customer_id")
     private Customer author;
 
+    private String filename;
+
     public Message() {
     }
 
