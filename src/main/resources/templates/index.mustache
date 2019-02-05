@@ -4,7 +4,7 @@
     <title>Title</title>
 </head>
 <body>
-   <div>Hello, user</div>
+   <div>Hello, ${Session.SPRING_SECURITY_CONTEXT.authentication.principal.getUsername()}</div>
     <a href="/main">Main</a>
 </body>
 </html>
