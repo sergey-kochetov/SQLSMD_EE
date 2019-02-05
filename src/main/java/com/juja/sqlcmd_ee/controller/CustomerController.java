@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/customer")
-//@PreAuthorize("hasAuthority('ADMIN)")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class CustomerController {
 
     @Autowired
