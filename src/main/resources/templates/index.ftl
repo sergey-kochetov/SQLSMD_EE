@@ -1,6 +1,6 @@
 <#import "parts/common.ftl" as c>
 
 <@c.page>
-<div>Hello, </div>
-<a href="/main">Main</a>
+<h4>Hello</h4>
+<div>This is SQLCMD</div>
 </@c.page>

@@ -1,39 +1,52 @@
 <#import "parts/common.ftl" as c>
-<#import "parts/login.ftl" as l>
 
 <@c.page>
-<div>
-    <@l.logout/>
-    <span><a href="/customer">User list</a> </span>
-</div>
-<div>
-    <form method="post" enctype="multipart/form-data">
-        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-        <input type="file" name="file">
-        <input type="text" name="text" placeholder="Enter msg">
-        <input type="text" name="tag" placeholder="tag">
-        <button type="submit">add</button>
-    </form>
-</div>
 <div>List msg</div>
-<form method="get" action="/main">
-    <input type="text" name="filter" value="${filter?ifExists}">
-    <button type="submit">find</button>
-</form>
-<#list messages as message>
-<div>
-    <b>${message.id}</b>
-    <b>${message.text}</b>
-    <b>${message.tag}</b>
-    <span>${message.author}</span>
-    <div>
-        <#if message.filename??>
-            <img src="/img/${message.filename}">
-        </#if>
+<div class="form-row">
+    <div class="form-group col-md-4">
+        <form method="get" action="/main" class="form-inline">
+            <input type="text" name="filter" value="${filter?ifExists}" placeholder="find">
+            <button type="submit" class="btn btn-primary ml-1">find</button>
+        </form>
     </div>
 </div>
-<#else>
-No message
-</#list>
+
+<a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false">
+    Add feedback
+</a>
+<div class="collapse" id="collapseExample">
+    <div class="form-group mt-2">
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+            <input type="text" class="form-control" name="text" placeholder="Enter msg">
+            <input type="text" class="form-control" name="tag" placeholder="tag">
+            <div class="custom-file">
+                <input type="file" name="file" id="customFile">
+                <label class="custom-file-label" for="customFile">Add file</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <#list messages as message>
+    <div class="card-header my-2">
+        <b>${message.tag}</b>
+    </div>
+    <div class="card-body my-2">
+        <blockquote class="blockquote mb-1">
+            <#if message.filename??>
+                <img src="/img/${message.filename}" class="card-img-top">
+            </#if>
+                <span>${message.text}</span>
+                <footer class="blockquote-footer">Say <cite title="Source Title"><i>${message.author}</i></cite></footer>
+        </blockquote>
+    </div>
+    <#else>
+    No message
+    </#list>
+</div>
 
 </@c.page>
