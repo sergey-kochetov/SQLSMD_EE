@@ -1,62 +1,82 @@
 package com.juja.sqlcmd_ee.dao;
 
-//public class JDBCDatabaseManager implements DatabaseManager {
-//
-//    private Connection connection;
-//    private JdbcTemplate template;
-//    private String database;
-//    private String userName;
-//
-//    @Override
-//    public void connect(String database, String userName, String password) {
-//        try {
-//            if (connection != null) {
-//                connection.close();
-//            }
-//            connection = DriverManager.getConnection(
-//                    "jdbc:postgresql://localhost:5432/" + database, userName, password);
-//            this.database = database;
-//            this.userName = userName;
-//            template = new JdbcTemplate(new SingleConnectionDataSource(connection, false));
-//        } catch (SQLException e) {
-//            connection = null;
-//            template = null;
-//            throw new RuntimeException(
-//                    String.format("Cant get connection for model:%s user:%s", database, userName), e);
-//        }
-//    }
-//
-//    @Override
-//    public Set<String> getTables() {
-//        String sql = "SELECT table_name FROM information_schema.tables " +
-//                "WHERE table_schema='public' AND table_type='BASE TABLE'";
-//        return new LinkedHashSet<>(
-//                template.query(sql, (rs, rowNum) -> rs.getString("table_name")
-//                ));
-//    }
-//
-//    @Override
-//    public List<String> getTableHead(String tableName) {
-//        String sql = String.format("SELECT * FROM information_schema.columns " +
-//                "WHERE table_schema = 'public' AND table_name = '%s'", tableName);
-//        return new LinkedList<>(template.query(sql,
-//                (rs, rowNum) -> rs.getString("column_name")
-//        ));
-//    }
-//
-//    @Override
-//    public List<DataSet> getTableData(String tableName) {
-//        String sql = String.format("SELECT * FROM public.%s", tableName);
-//        return template.query(sql, (rs, rowNum) -> {
-//                    ResultSetMetaData rsmd = rs.getMetaData();
-//                    DataSet dataSet = new DataSetImpl();
-//                    for (int i = 0; i < rsmd.getColumnCount(); i++) {
-//                        dataSet.put(rsmd.getColumnName(i + 1), rs.getObject(i + 1));
-//                    }
-//                    return dataSet;
-//                }
-//        );
-//    }
+import com.juja.sqlcmd_ee.model.DataSet;
+import com.juja.sqlcmd_ee.model.DataSetImpl;
+import lombok.Data;
+import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.stereotype.Component;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+@Component
+@Scope(value = "prototype")
+@Data
+public class JDBCDatabaseManager implements DatabaseManager {
+
+    private Connection connection;
+    private JdbcTemplate template;
+    private String database;
+    private String userName;
+
+    @Override
+    public void connect(String database, String userName, String password) {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+            connection = DriverManager.getConnection(
+                    "jdbc:postgresql://localhost:5432/" + database, userName, password);
+            this.database = database;
+            this.userName = userName;
+            template = new JdbcTemplate(new SingleConnectionDataSource(connection, false));
+        } catch (SQLException e) {
+            connection = null;
+            template = null;
+            throw new RuntimeException(
+                    String.format("Cant get connection for model:%s user:%s", database, userName), e);
+        }
+    }
+
+    @Override
+    public Set<String> getTables() {
+        String sql = "SELECT table_name FROM information_schema.tables " +
+                "WHERE table_schema='public' AND table_type='BASE TABLE'";
+        return new LinkedHashSet<>(
+                template.query(sql, (rs, rowNum) -> rs.getString("table_name")
+                ));
+    }
+
+    @Override
+    public List<String> getTableHead(String tableName) {
+        String sql = String.format("SELECT * FROM information_schema.columns " +
+                "WHERE table_schema = 'public' AND table_name = '%s'", tableName);
+        return new LinkedList<>(template.query(sql,
+                (rs, rowNum) -> rs.getString("column_name")
+        ));
+    }
+
+    @Override
+    public List<DataSet> getTableData(String tableName) {
+        String sql = String.format("SELECT * FROM public.%s", tableName);
+        return template.query(sql, (rs, rowNum) -> {
+                    ResultSetMetaData rsmd = rs.getMetaData();
+                    DataSet dataSet = new DataSetImpl();
+                    for (int i = 0; i < rsmd.getColumnCount(); i++) {
+                        dataSet.put(rsmd.getColumnName(i + 1), rs.getObject(i + 1));
+                    }
+                    return dataSet;
+                }
+        );
+    }
 
 //    @Override
 //    public void createTable(String tableName) {
@@ -100,4 +120,4 @@ package com.juja.sqlcmd_ee.dao;
 //    public void delete(String tableName, int id) {
 //        template.update(String.format("DELETE FROM %s WHERE id=%d", tableName, id));
 //    }
-//}
+}

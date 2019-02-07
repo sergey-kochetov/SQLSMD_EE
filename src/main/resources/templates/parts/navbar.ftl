@@ -20,6 +20,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="/customer">Users</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tables">Tables</a>
+            </li>
             </#if>
         </ul>
         <div class="navbar-text mr-2">${name}</div>
