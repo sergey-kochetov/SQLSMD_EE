@@ -5,6 +5,8 @@ import com.juja.sqlcmd_ee.model.DataSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +22,11 @@ public class ServiceTableImpl implements ServiceTable {
     }
 
     @Override
+    public void disconnect() {
+        manager.disconnect();
+    }
+
+    @Override
     public Set<String> getTables() {
         return manager.getTables();
     }
@@ -30,7 +37,23 @@ public class ServiceTableImpl implements ServiceTable {
     }
 
     @Override
-    public List<DataSet> getTableData(String tableName) {
-        return manager.getTableData(tableName);
+    public List<List<Object>> getTableData(String tableName) {
+        List<DataSet> tableData = manager.getTableData(tableName);
+        if (tableData == null) {
+            return Collections.emptyList();
+        }
+        LinkedList<List<Object>> list = new LinkedList<>();
+        for (DataSet tableDatum : tableData) {
+            List<Object> values = new LinkedList<>();
+            for (Object value : tableDatum.getValues()) {
+                if (value != null) {
+                    values.add(value.toString());
+                } else {
+                    values.add("");
+                }
+            }
+            list.add(values);
+        }
+        return list;
     }
 }

@@ -9,9 +9,11 @@ public interface ServiceTable {
 
     void connect(String database, String userName, String password);
 
+    void disconnect();
+
     Set<String> getTables();
 
     List<String> getTableHead(String tableName);
 
-    List<DataSet> getTableData(String tableName);
+    List<List<Object>> getTableData(String tableName);
 }

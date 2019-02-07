@@ -47,6 +47,18 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public void disconnect() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    String.format("Cant diconnection for model:%s user:%s", database, userName), e);
+        } finally {
+            connection = null;
+        }
+    }
+
+    @Override
     public Set<String> getTables() {
         String sql = "SELECT table_name FROM information_schema.tables " +
                 "WHERE table_schema='public' AND table_type='BASE TABLE'";

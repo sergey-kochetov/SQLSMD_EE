@@ -9,6 +9,8 @@ public interface DatabaseManager {
 
     void connect(String database, String userName, String password);
 
+    void disconnect();
+
     Set<String> getTables();
 
     List<String> getTableHead(String tableName);
