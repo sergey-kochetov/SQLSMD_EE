@@ -24,10 +24,6 @@ public class Customer implements UserDetails {
     @NotBlank(message = "Password can't be empty")
     private String password;
 
-    @Transient
-    @NotBlank(message = "Password confirmation can't be empty")
-    private String password2;
-
     private boolean active;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
