@@ -93,19 +93,19 @@ public class JDBCDatabaseManager implements DatabaseManager {
 //    @Override
 //    public void createTable(String tableName) {
 //        String sql = String.format("CREATE TABLE %s(id SERIAL PRIMARY KEY)", tableName);
-//        template.update(sql);
+//        migration.update(sql);
 //    }
 //
 //    @Override
 //    public void addColumn(String tableName, String columnName, String dataType) {
 //        String sql = String.format("ALTER TABLE %s ADD COLUMN %s %s;", tableName, columnName, dataType);
-//        template.update(sql);
+//        migration.update(sql);
 //    }
 //
 //    @Override
 //    public void dropColumn(String tableName, String columnName) {
 //        String sql = String.format("ALTER TABLE %s DROP COLUMN IF EXISTS %s", tableName, columnName);
-//        template.update(sql);
+//        migration.update(sql);
 //    }
 //
 //    @Override
@@ -113,7 +113,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 //        String tableNames = StringUtils.collectionToDelimitedString(input.getNames(), ",");
 //        String values = StringUtils.collectionToDelimitedString(input.getValues(), ",", "'", "'");
 //
-//        template.update(String.format("INSERT INTO public.%s (%s) VALUES (%s)",
+//        migration.update(String.format("INSERT INTO public.%s (%s) VALUES (%s)",
 //                tableName, tableNames, values));
 //    }
 //
@@ -125,11 +125,11 @@ public class JDBCDatabaseManager implements DatabaseManager {
 //
 //        List<Object> list = new LinkedList<>(newValue.getValues());
 //        list.add(id);
-//        template.update(sql, list.toArray());
+//        migration.update(sql, list.toArray());
 //    }
 //
 //    @Override
 //    public void delete(String tableName, int id) {
-//        template.update(String.format("DELETE FROM %s WHERE id=%d", tableName, id));
+//        migration.update(String.format("DELETE FROM %s WHERE id=%d", tableName, id));
 //    }
 }
