@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -22,9 +23,16 @@ public class CustomerService implements UserDetailsService {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return customerRepo.findByUsername(username);
+        Customer customer = customerRepo.findByUsername(username);
+        if (customer == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return customer;
     }
 
     public boolean addCustomer(Customer customer) {
@@ -37,6 +45,7 @@ public class CustomerService implements UserDetailsService {
         customer.setActive(true);
         customer.setRoles(Collections.singleton(Role.USER));
         customer.setActivationCode(UUID.randomUUID().toString());
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         customerRepo.save(customer);
 
         sendMsg(customer);
