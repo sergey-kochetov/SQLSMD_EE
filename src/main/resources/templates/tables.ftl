@@ -4,8 +4,9 @@
 <@c.page>
 <#if connect>
 
-<div>Table list</div>
-<table>
+<div class=container">
+    <p>Table list</p>
+<table class="table">
     <thead>
     <tr>
         <th>Table name</th>
@@ -23,7 +24,7 @@
         </#list>
     </#if>
 </table>
-
+</div>
 <@con.disconnect/>
 <#else>
 <@con.connect/>

@@ -18,8 +18,8 @@
     <div class="form-group mt-2">
         <form method="post" enctype="multipart/form-data">
             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-            <input type="text" class="form-control" name="text" placeholder="Enter msg">
             <input type="text" class="form-control" name="tag" placeholder="tag">
+            <input type="text" class="form-control" name="text" placeholder="Enter msg">
             <div class="custom-file">
                 <input type="file" name="file" id="customFile">
                 <label class="custom-file-label" for="customFile">Add file</label>
