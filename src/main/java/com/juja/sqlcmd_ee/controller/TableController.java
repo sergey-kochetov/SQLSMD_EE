@@ -54,7 +54,7 @@ public class TableController {
         return "tablesData";
     }
 
-    @PostMapping("{table}")
+    @PostMapping("{table}/addColum")
     public String addColumn(@PathVariable String table,
                             @RequestParam("columname") String columname,
                             @RequestParam("datatype") String datatype,
