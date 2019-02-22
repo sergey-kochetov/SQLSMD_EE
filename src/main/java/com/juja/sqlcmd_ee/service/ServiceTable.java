@@ -3,6 +3,7 @@ package com.juja.sqlcmd_ee.service;
 import com.juja.sqlcmd_ee.model.DataSet;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface ServiceTable {
@@ -22,4 +23,8 @@ public interface ServiceTable {
     void addColumn(String tableName, String columnName, String dataType);
 
     void dropColumn(String tableName, String columnName);
+
+    void insert(String tableName, Map<String, Object> input);
+
+    void delete(String tableName, Long id);
 }

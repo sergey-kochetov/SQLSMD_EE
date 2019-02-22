@@ -12,6 +12,11 @@ public class DataSetImpl implements DataSet {
     }
 
     @Override
+    public void putAll(Map<String, Object> data) {
+        data.putAll(data);
+    }
+
+    @Override
     public List<Object> getValues() {
         return new LinkedList<>(data.values());
     }

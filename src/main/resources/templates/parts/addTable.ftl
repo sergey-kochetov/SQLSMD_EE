@@ -17,7 +17,7 @@
         <input type="text" name="columname" class="form-control" placeholder="+"/>
     </div>
     <div class="col-sm-4">
-        <input type="text" name="datatype" class="form-control" placeholder="datatype"/>
+        <input type="text" name="datatype" class="form-control" placeholder="datatype" value="varchar(255)"/>
     </div>
     <button class="btn btn-primary" type="submit">add</button>
 </form>

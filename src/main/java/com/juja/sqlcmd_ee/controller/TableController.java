@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequestMapping("/tables")
@@ -83,5 +84,31 @@ public class TableController {
     public String addTable(@RequestParam String tablename, Model model) {
         serviceTable.createTable(tablename);
         return "redirect:/tables";
+    }
+
+    @GetMapping("{table}/add-data")
+    public String addDataPage(@PathVariable("table") String table, Model model) {
+        model.addAttribute("table", table);
+        model.addAttribute("head", serviceTable.getTableHead(table));
+        return "addNewData";
+    }
+
+    @PostMapping("{table}/add-data")
+    public String addData(@PathVariable("table") String table,
+                          @RequestParam Map<String, Object> data,
+                          Model model) {
+        data.remove("_csrf");
+        serviceTable.insert(table, data);
+
+        return "redirect:/tables/{table}";
+    }
+
+    @PostMapping("{table}/del/{id}")
+    public String delDataById(@PathVariable("table") String table,
+                              @PathVariable("id") Long id,
+                              Model model) {
+        serviceTable.delete(table, id);
+
+        return "redirect:/tables/{table}";
     }
 }

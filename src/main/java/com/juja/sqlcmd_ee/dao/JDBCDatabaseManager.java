@@ -7,15 +7,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Scope(value = "prototype")
@@ -107,15 +105,15 @@ public class JDBCDatabaseManager implements DatabaseManager {
         String sql = String.format("ALTER TABLE %s DROP COLUMN IF EXISTS %s", tableName, columnName);
         template.update(sql);
     }
-//
-//    @Override
-//    public void insert(String tableName, DataSet input) {
-//        String tableNames = StringUtils.collectionToDelimitedString(input.getNames(), ",");
-//        String values = StringUtils.collectionToDelimitedString(input.getValues(), ",", "'", "'");
-//
-//        migration.update(String.format("INSERT INTO public.%s (%s) VALUES (%s)",
-//                tableName, tableNames, values));
-//    }
+
+    @Override
+    public void insert(String tableName, Map<String, Object> input) {
+        String tableNames = StringUtils.collectionToDelimitedString(input.keySet(), ",");
+        String values = StringUtils.collectionToDelimitedString(input.values(), ",", "'", "'");
+
+        template.update(String.format("INSERT INTO public.%s (%s) VALUES (%s)",
+                tableName, tableNames, values));
+    }
 //
 //    @Override
 //    public void update(String tableName, int id, DataSet newValue) {
@@ -127,9 +125,9 @@ public class JDBCDatabaseManager implements DatabaseManager {
 //        list.add(id);
 //        migration.update(sql, list.toArray());
 //    }
-//
-//    @Override
-//    public void delete(String tableName, int id) {
-//        migration.update(String.format("DELETE FROM %s WHERE id=%d", tableName, id));
-//    }
+
+    @Override
+    public void delete(String tableName, Long id) {
+        template.update(String.format("DELETE FROM %s WHERE id=%d", tableName, id));
+    }
 }

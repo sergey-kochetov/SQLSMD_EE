@@ -5,10 +5,7 @@ import com.juja.sqlcmd_ee.model.DataSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ServiceTableImpl implements ServiceTable {
@@ -70,5 +67,15 @@ public class ServiceTableImpl implements ServiceTable {
     @Override
     public void dropColumn(String tableName, String columnName) {
         manager.dropColumn(tableName, columnName);
+    }
+
+    @Override
+    public void insert(String tableName, Map<String, Object> input) {
+        manager.insert(tableName, input);
+    }
+
+    @Override
+    public void delete(String tableName, Long id) {
+        manager.delete(tableName, id);
     }
 }

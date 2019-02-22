@@ -3,6 +3,7 @@ package com.juja.sqlcmd_ee.dao;
 import com.juja.sqlcmd_ee.model.DataSet;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface DatabaseManager {
@@ -18,12 +19,12 @@ public interface DatabaseManager {
     List<DataSet> getTableData(String tableName);
 
     void createTable(String tableName);
-//
-//    void insert(String tableName, DataSet input);
+
+    void insert(String tableName, Map<String, Object> input);
 //
 //    void update(String tableName, int id, DataSet newValue);
-//
-//    void delete(String tableName, int id);
+
+    void delete(String tableName, Long id);
 
     void addColumn(String tableName, String columnName, String dataType);
 
