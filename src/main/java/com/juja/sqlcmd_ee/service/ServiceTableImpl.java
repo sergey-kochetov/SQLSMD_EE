@@ -56,4 +56,19 @@ public class ServiceTableImpl implements ServiceTable {
         }
         return list;
     }
+
+    @Override
+    public void createTable(String tableName) {
+        manager.createTable(tableName);
+    }
+
+    @Override
+    public void addColumn(String tableName, String columnName, String dataType) {
+        manager.addColumn(tableName, columnName, dataType);
+    }
+
+    @Override
+    public void dropColumn(String tableName, String columnName) {
+        manager.dropColumn(tableName, columnName);
+    }
 }

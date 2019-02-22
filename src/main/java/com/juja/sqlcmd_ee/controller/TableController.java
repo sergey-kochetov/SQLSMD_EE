@@ -50,6 +50,38 @@ public class TableController {
         model.addAttribute("head", serviceTable.getTableHead(table));
         List<List<Object>> tableData = serviceTable.getTableData(table);
         model.addAttribute("datas", tableData);
+        model.addAttribute("table", table);
         return "tablesData";
+    }
+
+    @PostMapping("{table}")
+    public String addColumn(@PathVariable String table,
+                            @RequestParam("columname") String columname,
+                            @RequestParam("datatype") String datatype,
+                            Model model) {
+        serviceTable.addColumn(table, columname, datatype);
+
+        return "redirect:/tables/" + table;
+    }
+
+    @PostMapping("{table}/delColum/{column}")
+    public String delColumn(@PathVariable("table") String table,
+                            @PathVariable("column") String column,
+                            Model model) {
+        serviceTable.dropColumn(table, column);
+
+        return "redirect:/tables/" + table;
+    }
+
+    @GetMapping("/add-table")
+    public String addTable(Model model) {
+
+        return "add-table";
+    }
+
+    @PostMapping("/add-table")
+    public String addTable(@RequestParam String tablename, Model model) {
+        serviceTable.createTable(tablename);
+        return "redirect:/tables";
     }
 }

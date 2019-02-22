@@ -16,4 +16,10 @@ public interface ServiceTable {
     List<String> getTableHead(String tableName);
 
     List<List<Object>> getTableData(String tableName);
+
+    void createTable(String tableName);
+
+    void addColumn(String tableName, String columnName, String dataType);
+
+    void dropColumn(String tableName, String columnName);
 }

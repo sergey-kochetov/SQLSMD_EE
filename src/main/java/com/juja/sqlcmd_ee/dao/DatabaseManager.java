@@ -17,15 +17,15 @@ public interface DatabaseManager {
 
     List<DataSet> getTableData(String tableName);
 
-//    void createTable(String tableName);
+    void createTable(String tableName);
 //
 //    void insert(String tableName, DataSet input);
 //
 //    void update(String tableName, int id, DataSet newValue);
 //
 //    void delete(String tableName, int id);
-//
-//    void addColumn(String tableName, String columnName, String dataType);
-//
-//    void dropColumn(String tableName, String columnName);
+
+    void addColumn(String tableName, String columnName, String dataType);
+
+    void dropColumn(String tableName, String columnName);
 }

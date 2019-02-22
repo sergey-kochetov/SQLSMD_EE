@@ -90,23 +90,23 @@ public class JDBCDatabaseManager implements DatabaseManager {
         );
     }
 
-//    @Override
-//    public void createTable(String tableName) {
-//        String sql = String.format("CREATE TABLE %s(id SERIAL PRIMARY KEY)", tableName);
-//        migration.update(sql);
-//    }
-//
-//    @Override
-//    public void addColumn(String tableName, String columnName, String dataType) {
-//        String sql = String.format("ALTER TABLE %s ADD COLUMN %s %s;", tableName, columnName, dataType);
-//        migration.update(sql);
-//    }
-//
-//    @Override
-//    public void dropColumn(String tableName, String columnName) {
-//        String sql = String.format("ALTER TABLE %s DROP COLUMN IF EXISTS %s", tableName, columnName);
-//        migration.update(sql);
-//    }
+    @Override
+    public void createTable(String tableName) {
+        String sql = String.format("CREATE TABLE %s(id SERIAL PRIMARY KEY)", tableName);
+        template.update(sql);
+    }
+
+    @Override
+    public void addColumn(String tableName, String columnName, String dataType) {
+        String sql = String.format("ALTER TABLE %s ADD COLUMN %s %s;", tableName, columnName, dataType);
+        template.update(sql);
+    }
+
+    @Override
+    public void dropColumn(String tableName, String columnName) {
+        String sql = String.format("ALTER TABLE %s DROP COLUMN IF EXISTS %s", tableName, columnName);
+        template.update(sql);
+    }
 //
 //    @Override
 //    public void insert(String tableName, DataSet input) {

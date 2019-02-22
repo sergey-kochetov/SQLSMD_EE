@@ -6,6 +6,7 @@
 
 <div class=container">
     <p>Table list</p>
+    <p><a href="/tables/add-table">add new table</a></p>
 <table class="table">
     <thead>
     <tr>
